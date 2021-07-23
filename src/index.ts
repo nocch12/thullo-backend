@@ -1,7 +1,9 @@
-import express, { Request, Response, NextFunction } from 'express';
-import path from 'path';
+import express from 'express';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+
+import { errorHandler } from './exceptions/HttpException';
+import { NotFoundException } from './exceptions/NotFoundException';
 
 import indexRouter from './routes/index';
 
@@ -11,23 +13,19 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
-// app.use((req, res, next) => {
-//   next(createError(404));
-// });
-
-// error handler
-app.use((err, req: Request, res: Response, next: NextFunction) => {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.message.code || 500).json(err.message);
+app.use((req, res, next) => {
+  throw new NotFoundException;
 });
 
-export default app;
+// error handler
+app.use(errorHandler);
+
+const PORT = 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server start on ${PORT}`);
+});

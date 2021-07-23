@@ -1,6 +1,6 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 
-class HttpException<T = {}> extends Error {
+export class HttpException<T = {}> extends Error {
   code?: number;
   message: string;
   data: T;
@@ -13,6 +13,6 @@ class HttpException<T = {}> extends Error {
   }
 }
 
-export const errorHandler = (err: HttpException, req: Request, res: Response) => {
-  res.status(err.code || 500).send(err.message);
+export const errorHandler = (err: HttpException, req: Request, res: Response, next: NextFunction) => {
+  res.status(err.code || 500).json(err);
 }
