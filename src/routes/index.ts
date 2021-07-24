@@ -7,7 +7,7 @@ const indexController = new IndexController();
 /* GET home page. */
 router.get('/', async (req: Request, res: Response) => {
   const result = await indexController.index(req);
-  res.json(result);
+  res.json(123);
 });
 
 router.get('/csrf-token', (req: Request, res: Response) => {

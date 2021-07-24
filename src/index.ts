@@ -1,7 +1,8 @@
-import express, { NextFunction } from 'express';
+import express from 'express';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import dotenv from 'dotenv';
+import passport from 'passport'
 
 import { cors } from './middleware/cors';
 import { csurf } from './middleware/csrf';
@@ -27,6 +28,10 @@ app.use(csurf);
 // csrfトークンの確認
 app.use(csrfHandler);
 
+// passport設定
+app.use(passport.initialize());
+
+// ルーティング設定
 routes(app);
 
 // catch 404 and forward to error handler
