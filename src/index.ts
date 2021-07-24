@@ -1,11 +1,12 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+import { cors } from '../src/middleware/cors'
 
 import { errorHandler } from './exceptions/HttpException';
 import { NotFoundException } from './exceptions/NotFoundException';
 
-import indexRouter from './routes/index';
+import routes from './routes/routes';
 
 const app = express();
 
@@ -13,8 +14,9 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors);
 
-app.use('/', indexRouter);
+routes(app);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
