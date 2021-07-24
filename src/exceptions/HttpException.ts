@@ -12,7 +12,3 @@ export class HttpException<T = {}> extends Error {
     this.data = data;
   }
 }
-
-export const errorHandler = (err: HttpException, req: Request, res: Response, next: NextFunction) => {
-  res.status(err.code || 500).json(err);
-}

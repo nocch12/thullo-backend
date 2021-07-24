@@ -7,7 +7,16 @@ const indexController = new IndexController();
 /* GET home page. */
 router.get('/', async (req: Request, res: Response) => {
   const result = await indexController.index(req);
-  res.send(result);
+  res.json(result);
+});
+
+router.get('/csrf-token', (req: Request, res: Response) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
+
+router.post('/', async (req: Request, res: Response) => {
+  // const result = await indexController.index(req);
+  res.json({ post: 1 });
 });
 
 export default router;
