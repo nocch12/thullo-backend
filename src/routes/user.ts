@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 const router = express.Router();
 import { UserController } from '../controllers/UserController';
 import { IUserRegisterRequest } from '../requests/user/UserRegisterRequest';
@@ -6,33 +6,29 @@ import passport from '../middleware/passport';
 
 const userController = new UserController();
 
+// 新規登録
 router.post('/register', async (req: IUserRegisterRequest, res, next) => {
   try {
-    const result = await userController.register(req);
-    return res.json(result);
+    return await userController.register(req, res);
   } catch (e) {
     next(e);
   }
 });
 
+// ログイン
 router.post(
   '/login',
   passport.authenticate('login', { session: false }),
   async (req, res, next) => {
     try {
-      const result = await userController.login(req);
-      // クッキーにキー'jwt'でトークンをセット
-      res.cookie('jwt', result.headerToken, {
-        httpOnly: true,
-        signed: true,
-      });
-      res.json(result);
+      return await userController.login(req, res);
     } catch (e) {
       next(e);
     }
   }
 );
 
+// 認証ユーザー取得
 router.get(
   '/me',
   passport.authenticate('verify', { session: false }),

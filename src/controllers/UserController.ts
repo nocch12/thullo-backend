@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 import {
   IUserRegisterRequest,
@@ -9,7 +9,7 @@ import { UserLoginUseCase } from '../usecases/user/UserLoginUseCase';
 import { responseUser } from '../response/user/user';
 
 export class UserController {
-  async register(req: IUserRegisterRequest) {
+  async register(req: IUserRegisterRequest, res: Response) {
     try {
       const request = new UserRegisterRequest(req.body);
       const { name, email, password } = request;
@@ -17,19 +17,25 @@ export class UserController {
       const useCase = new UserRegisterUseCase();
       const user = await useCase.register(name, email, password);
 
-      return { user };
+      return res.json({ user });
     } catch (e) {
       throw e;
     }
   }
 
-  async login(req: Request) {
+  async login(req: Request, res: Response) {
     try {
       const user = req.user;
       const useCase = new UserLoginUseCase();
       const token = useCase.createToken(user as responseUser);
 
-      return { headerToken: token, user };
+      // クッキーにキー'jwt'でトークンをセット
+      res.cookie('jwt', token, {
+        httpOnly: true,
+        signed: true,
+      });
+
+      return res.json({ user });
     } catch (e) {
       throw e;
     }
