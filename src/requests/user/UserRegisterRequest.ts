@@ -23,12 +23,8 @@ export class UserRegisterRequest {
   }
 
   validrequest(body: Body) {
-    console.log(body);
-    
     const { name, email, password } = body;
     if (!name) {
-      console.log(0, name);
-      
       throw new HttpException(422, 'name', {});
     }
     if (!email || email.length < 4) {

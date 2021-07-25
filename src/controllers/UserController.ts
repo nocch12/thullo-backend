@@ -4,7 +4,9 @@ import {
   IUserRegisterRequest,
   UserRegisterRequest,
 } from '../requests/user/UserRegisterRequest';
-import {UserRegisterUseCase} from '../usecases/user/UserRegisterUseCase'
+import { UserRegisterUseCase } from '../usecases/user/UserRegisterUseCase';
+import { UserLoginUseCase } from '../usecases/user/UserLoginUseCase';
+import { responseUser } from '../response/user/user';
 
 export class UserController {
   async register(req: IUserRegisterRequest) {
@@ -24,8 +26,10 @@ export class UserController {
   async login(req: Request) {
     try {
       const user = req.user;
+      const useCase = new UserLoginUseCase();
+      const token = useCase.createToken(user as responseUser);
 
-      return { user };
+      return { headerToken: token, user };
     } catch (e) {
       throw e;
     }

@@ -2,7 +2,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import dotenv from 'dotenv';
-import passport from 'passport'
+import passport from 'passport';
 
 import { cors } from './middleware/cors';
 import { csurf } from './middleware/csrf';
@@ -10,7 +10,6 @@ import { csrfHandler, errorHandler } from './exceptions/errorHandler';
 import { NotFoundException } from './exceptions/NotFoundException';
 
 import routes from './routes/routes';
-
 
 dotenv.config();
 const app = express();
@@ -21,7 +20,7 @@ app.disable('x-powered-by');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser(process.env.APP_SECRET));
 app.use(cors);
 app.use(csurf);
 

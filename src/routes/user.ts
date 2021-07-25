@@ -6,11 +6,6 @@ import passport from '../middleware/passport';
 
 const userController = new UserController();
 
-router.get('/me', async (req: Request, res: Response) => {
-  // const result = await userController.me(req);
-  // res.json(result);
-});
-
 router.post('/register', async (req: IUserRegisterRequest, res, next) => {
   try {
     const result = await userController.register(req);
@@ -23,9 +18,30 @@ router.post('/register', async (req: IUserRegisterRequest, res, next) => {
 router.post(
   '/login',
   passport.authenticate('login', { session: false }),
-  async (req: Request, res: Response) => {
-    const result = await userController.login(req);
-    res.json(result);
+  async (req, res, next) => {
+    try {
+      const result = await userController.login(req);
+      // クッキーにキー'jwt'でトークンをセット
+      res.cookie('jwt', result.headerToken, {
+        httpOnly: true,
+        signed: true,
+      });
+      res.json(result);
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
+router.get(
+  '/me',
+  passport.authenticate('verify', { session: false }),
+  async (req, res, next) => {
+    try {
+      res.json({ user: req.user });
+    } catch (e) {
+      next(e);
+    }
   }
 );
 
