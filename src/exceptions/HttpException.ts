@@ -1,5 +1,3 @@
-import { NextFunction, Request, Response } from 'express'
-
 export class HttpException<T = {}> extends Error {
   code?: number;
   message: string;

@@ -12,5 +12,7 @@ export const csrfHandler = (err: {code: string}, req: Request, res: Response, ne
 
 // 全体のエラーハンドラー
 export const errorHandler = (err: HttpException, req: Request, res: Response, next: NextFunction) => {
+  console.log(99, err);
+  
   res.status(err.code || 500).json(err);
 }

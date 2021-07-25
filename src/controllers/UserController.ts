@@ -1,26 +1,23 @@
 import { Request } from 'express';
-import { PrismaClient } from '@prisma/client';
-import { UserRegisterRequest } from '../requests/user/UserRegisterRequest';
-import { hasher } from '../libs/hasher';
 
-const prisma = new PrismaClient();
+import {
+  IUserRegisterRequest,
+  UserRegisterRequest,
+} from '../requests/user/UserRegisterRequest';
+import {UserRegisterUseCase} from '../usecases/user/UserRegisterUseCase'
 
 export class UserController {
-  async register(req: UserRegisterRequest) {
+  async register(req: IUserRegisterRequest) {
     try {
-      const { email, password } = req.body;
+      const request = new UserRegisterRequest(req.body);
+      const { name, email, password } = request;
 
-      const user = await prisma.user.create({
-        data: {
-          email,
-          password: hasher.hash(password),
-          name: 'test',
-        },
-      });
-      await prisma.$disconnect();
+      const useCase = new UserRegisterUseCase();
+      const user = await useCase.register(name, email, password);
+
       return { user };
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      throw e;
     }
   }
 
@@ -29,12 +26,12 @@ export class UserController {
       const user = req.user;
 
       return { user };
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      throw e;
     }
   }
 
-  async me(req: UserRegisterRequest) {
+  async me(req: unknown) {
     return { me: 1 };
   }
 }
