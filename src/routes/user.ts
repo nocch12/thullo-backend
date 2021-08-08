@@ -28,11 +28,24 @@ router.post(
   }
 );
 
+// ログアウト
+router.get(
+  '/logout',
+  (req, res, next) => {
+    try {
+      res.cookie('jwt', '');
+      return res.json(null);
+    } catch (e) {
+      next(e);
+    }
+  }
+);
+
 // 認証ユーザー取得
 router.get(
   '/me',
   passport.authenticate('verify', { session: false }),
-  async (req, res, next) => {
+  (req, res, next) => {
     try {
       res.json({ user: req.user });
     } catch (e) {

@@ -10,7 +10,7 @@ export class UserRegisterUseCase {
   }
 
   async register(name: string, email: string, password: string) {
-    if (await this.duplicateEmail(email)) {
+    if (await this.isDuplicateEmail(email)) {
       throw new HttpException(422, 'Duplicate Email', {});
     }
 
@@ -25,7 +25,7 @@ export class UserRegisterUseCase {
     return this.responseUser(user);
   }
 
-  async duplicateEmail(email: string) {
+  async isDuplicateEmail(email: string) {
     const user = await this.user.findUnique({
       where: {
         email,

@@ -11,11 +11,114 @@ generator client {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  email String @unique
-  name String?
-  password String?
-  gid String?
+  id            Int             @id @default(autoincrement())
+  email         String          @unique
+  name          String?
+  password      String?
+  gid           String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  Board         Board[]
+  Task          Task[]
+  TaskComment   TaskComment[]
+  TaskFile      TaskFile[]
+  TaskLabel     TaskLabel[]
+  UsersOnBoards UsersOnBoards[]
+  UsersOnTasks  UsersOnTasks[]
+}
+
+model UsersOnBoards {
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  board      Board    @relation(fields: [boardId], references: [id])
+  boardId    Int
+  assignedAt DateTime @default(now())
+
+  @@id([userId, boardId])
+}
+
+model Board {
+  id            Int             @id @default(autoincrement())
+  boardName     String
+  description   String?         @db.LongText
+  imagePath     String?
+  published     Boolean
+  author        User            @relation(fields: [authorId], references: [id])
+  authorId      Int
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  TaskList      TaskList[]
+  UsersOnBoards UsersOnBoards[]
+}
+
+model TaskList {
+  id       Int    @id @default(autoincrement())
+  listName String
+  board    Board  @relation(fields: [boardId], references: [id])
+  boardId  Int
+  Task     Task[]
+  order    Int    @default(0)
+}
+
+model UsersOnTasks {
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  task       Task     @relation(fields: [taskId], references: [id])
+  taskId     Int
+  assignedAt DateTime @default(now())
+
+  @@id([userId, taskId])
+}
+
+model Task {
+  id           Int            @id @default(autoincrement())
+  boardName    String
+  description  String?        @db.LongText
+  imagePath    String?
+  order        Int            @default(0)
+  list         TaskList       @relation(fields: [listId], references: [id])
+  listId       Int
+  author       User           @relation(fields: [authorId], references: [id])
+  authorId     Int
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  TaskComment  TaskComment[]
+  TaskFile     TaskFile[]
+  TaskLabel    TaskLabel[]
+  UsersOnTasks UsersOnTasks[]
+}
+
+model TaskComment {
+  id        Int      @id @default(autoincrement())
+  comment   String   @db.LongText
+  task      Task     @relation(fields: [taskId], references: [id])
+  taskId    Int
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TaskFile {
+  id        Int      @id @default(autoincrement())
+  fileName  String
+  filePath  String
+  task      Task     @relation(fields: [taskId], references: [id])
+  taskId    Int
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TaskLabel {
+  id        Int      @id @default(autoincrement())
+  labelName String
+  color     String
+  task      Task     @relation(fields: [taskId], references: [id])
+  taskId    Int
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

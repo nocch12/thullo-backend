@@ -1,10 +1,9 @@
-import { IndexRequest } from '../requests/IndexRequest';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 export class IndexController {
-  async index(req: IndexRequest) {
+  async index(req) {
     try {
       // const users = await prisma.user.findFirst();
       // await prisma.$disconnect();
