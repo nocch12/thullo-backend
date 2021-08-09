@@ -9,7 +9,21 @@ export class BoardFindUseCase {
   }
 
   async findAll() {
-    const boardList = await this.board.findMany();
+    const boardList = await this.board.findMany({
+      include: {
+        UsersOnBoards: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                imagePath: true,
+              }
+            }
+          }
+        }
+      }
+    });
     return boardList;
   }
 }

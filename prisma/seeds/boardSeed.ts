@@ -14,6 +14,11 @@ const boardSeed = async (user: User) => {
         description: `ボード${user.id}${i}\nです。`,
         authorId: user.id,
         published: true,
+        UsersOnBoards: {
+          create: {
+            userId: user.id
+          }
+        }
       },
     });
 

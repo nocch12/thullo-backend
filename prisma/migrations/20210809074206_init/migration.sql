@@ -1,4 +1,19 @@
 -- CreateTable
+CREATE TABLE `User` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `email` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191),
+    `imagePath` VARCHAR(191),
+    `password` VARCHAR(191),
+    `gid` VARCHAR(191),
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `User.email_unique`(`email`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `UsersOnBoards` (
     `userId` INTEGER NOT NULL,
     `boardId` INTEGER NOT NULL,
@@ -43,7 +58,7 @@ CREATE TABLE `UsersOnTasks` (
 -- CreateTable
 CREATE TABLE `Task` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `boardName` VARCHAR(191) NOT NULL,
+    `taskName` VARCHAR(191) NOT NULL,
     `description` LONGTEXT,
     `imagePath` VARCHAR(191),
     `order` INTEGER NOT NULL DEFAULT 0,
@@ -81,12 +96,19 @@ CREATE TABLE `TaskFile` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `LabelsOnTasks` (
+    `labelId` INTEGER NOT NULL,
+    `taskId` INTEGER NOT NULL,
+    `assignedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    PRIMARY KEY (`labelId`, `taskId`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `TaskLabel` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `labelName` VARCHAR(191) NOT NULL,
     `color` VARCHAR(191) NOT NULL,
-    `taskId` INTEGER NOT NULL,
-    `authorId` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -130,7 +152,7 @@ ALTER TABLE `TaskFile` ADD FOREIGN KEY (`taskId`) REFERENCES `Task`(`id`) ON DEL
 ALTER TABLE `TaskFile` ADD FOREIGN KEY (`authorId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `TaskLabel` ADD FOREIGN KEY (`taskId`) REFERENCES `Task`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `LabelsOnTasks` ADD FOREIGN KEY (`labelId`) REFERENCES `TaskLabel`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `TaskLabel` ADD FOREIGN KEY (`authorId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `LabelsOnTasks` ADD FOREIGN KEY (`taskId`) REFERENCES `Task`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
