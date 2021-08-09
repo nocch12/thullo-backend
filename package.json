@@ -6,7 +6,8 @@
     "start": "npm run build && node ./build/index",
     "build": "tsc",
     "watch": "ts-node-dev --respawn --watch --exit-child src/index.ts",
-    "test": "jest"
+    "test": "jest",
+    "db:seed": "npx prisma migrate reset && npx prisma db seed --preview-feature"
   },
   "dependencies": {
     "@prisma/client": "^2.27.0",

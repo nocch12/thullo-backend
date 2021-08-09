@@ -22,7 +22,6 @@ model User {
   Task          Task[]
   TaskComment   TaskComment[]
   TaskFile      TaskFile[]
-  TaskLabel     TaskLabel[]
   UsersOnBoards UsersOnBoards[]
   UsersOnTasks  UsersOnTasks[]
 }
@@ -71,21 +70,21 @@ model UsersOnTasks {
 }
 
 model Task {
-  id           Int            @id @default(autoincrement())
-  boardName    String
-  description  String?        @db.LongText
-  imagePath    String?
-  order        Int            @default(0)
-  list         TaskList       @relation(fields: [listId], references: [id])
-  listId       Int
-  author       User           @relation(fields: [authorId], references: [id])
-  authorId     Int
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  TaskComment  TaskComment[]
-  TaskFile     TaskFile[]
-  TaskLabel    TaskLabel[]
-  UsersOnTasks UsersOnTasks[]
+  id            Int             @id @default(autoincrement())
+  taskName     String
+  description   String?         @db.LongText
+  imagePath     String?
+  order         Int             @default(0)
+  list          TaskList        @relation(fields: [listId], references: [id])
+  listId        Int
+  author        User            @relation(fields: [authorId], references: [id])
+  authorId      Int
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  TaskComment   TaskComment[]
+  TaskFile      TaskFile[]
+  UsersOnTasks  UsersOnTasks[]
+  LabelsOnTasks LabelsOnTasks[]
 }
 
 model TaskComment {
@@ -111,14 +110,21 @@ model TaskFile {
   updatedAt DateTime @updatedAt
 }
 
+model LabelsOnTasks {
+  label      TaskLabel @relation(fields: [labelId], references: [id])
+  labelId    Int
+  task       Task      @relation(fields: [taskId], references: [id])
+  taskId     Int
+  assignedAt DateTime  @default(now())
+
+  @@id([labelId, taskId])
+}
+
 model TaskLabel {
-  id        Int      @id @default(autoincrement())
-  labelName String
-  color     String
-  task      Task     @relation(fields: [taskId], references: [id])
-  taskId    Int
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            Int             @id @default(autoincrement())
+  labelName     String
+  color         String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  LabelsOnTasks LabelsOnTasks[]
 }
