@@ -6,7 +6,7 @@ import {
 } from '../requests/user/UserRegisterRequest';
 import { UserRegisterUseCase } from '../usecases/user/UserRegisterUseCase';
 import { UserLoginUseCase } from '../usecases/user/UserLoginUseCase';
-import { responseUser } from '../response/user/user';
+import { NotFoundException } from '../exceptions/NotFoundException';
 
 export class UserController {
   async register(req: IUserRegisterRequest, res: Response) {
@@ -27,7 +27,12 @@ export class UserController {
     try {
       const user = req.user;
       const useCase = new UserLoginUseCase();
-      const token = useCase.createToken(user as responseUser);
+
+      if (!user) {
+        throw new NotFoundException();
+      }
+      
+      const token = useCase.createToken(user);
 
       // クッキーにキー'jwt'でトークンをセット
       res.cookie('jwt', token, {

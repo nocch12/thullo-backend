@@ -3,7 +3,6 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import { PrismaClient } from '@prisma/client';
 
-import { responseUser } from '../response/user/user';
 import { hasher } from '../libs/hasher';
 import dotenv from 'dotenv';
 
@@ -46,13 +45,9 @@ passport.use(
   new JwtStrategy(
     {
       secretOrKey: process.env.APP_SECRET as string,
-      // jwtFromRequest: ExtractJwt.fromHeader('jwt'),
       jwtFromRequest: (req) => {
-        console.log(req?.signedCookies);
-        
         return req?.signedCookies?.jwt || null;
       },
-
     },
     async (payload, done) => {
       const user = await prisma.user.findUnique({

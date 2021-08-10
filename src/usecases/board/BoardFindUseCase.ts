@@ -1,5 +1,4 @@
-import { PrismaClient, Board } from '@prisma/client';
-import { HttpException } from '../../exceptions/HttpException';
+import { PrismaClient } from '@prisma/client';
 
 export class BoardFindUseCase {
   private board;
@@ -8,7 +7,7 @@ export class BoardFindUseCase {
     this.board = prisma.board;
   }
 
-  async findAll() {
+  async findAllwithUsers() {
     const boardList = await this.board.findMany({
       include: {
         UsersOnBoards: {
@@ -18,12 +17,19 @@ export class BoardFindUseCase {
                 id: true,
                 name: true,
                 imagePath: true,
-              }
-            }
-          }
-        }
-      }
+              },
+            },
+          },
+        },
+      },
     });
-    return boardList;
+
+    const res = boardList.map((b) => {
+      return {
+        ...b,
+        users: b.UsersOnBoards.map((u) => u.user),
+      };
+    });
+    return res;
   }
 }

@@ -1,12 +1,11 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-
-import { responseUser } from '../../response/user/user';
+import { ResUser } from '../../response/user/ResUser';
 
 dotenv.config();
 
 export class UserLoginUseCase {
-  createToken(user: responseUser) {
+  createToken(user: ResUser) {
     const token = jwt.sign(user, process.env.APP_SECRET as string);
 
     return token;
