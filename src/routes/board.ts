@@ -6,6 +6,7 @@ import { BoardController } from '../controllers/BoardController';
 const boardController = new BoardController();
 
 router.get('/', boardController.index);
+router.get('/:boardId(\\d+)', boardController.detail);
 router.post(
   '/',
   passport.authenticate('verify', { session: false }),
