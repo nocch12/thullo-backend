@@ -12,6 +12,11 @@ router.post(
   passport.authenticate('verify', { session: false }),
   boardController.create
 );
+router.patch(
+  '/',
+  passport.authenticate('verify', { session: false }),
+  boardController.update
+);
 router.post(
   '/update/published',
   passport.authenticate('verify', { session: false }),

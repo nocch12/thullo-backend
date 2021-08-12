@@ -17,7 +17,7 @@ export class BoardFindUseCase {
     const res = boardList.map((b) => {
       return {
         ...b,
-        users: b.UsersOnBoards.map((u) => u.user),
+        users: b.UsersOnBoards?.map((u) => u.user),
       };
     });
     return res;

@@ -3,6 +3,7 @@ import { BoardFindUseCase } from '../usecases/board/BoardFindUseCase';
 import { BoardCreateUseCase } from '../usecases/board/BoardCreateUseCase';
 import { BoardCreateRequest } from '../requests/board/BoardCreateRequest';
 import { UnauthorizedException } from '../exceptions/UnauthorizedException';
+import { BoardUpdateRequest } from '../requests/board/BoardUpdateRequest';
 import { BoardUpdatePublishedRequest } from '../requests/board/BoardUpdatePublishedRequest';
 import { BoardUpdateUseCase } from '../usecases/board/BoardUpdateUseCase';
 import { BoardDetailRequest } from '../requests/board/BoardDetailRequest';
@@ -44,6 +45,28 @@ export class BoardController {
         createRequest,
         req.user
       );
+
+      return res.json(result);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  // 更新
+  async update(req: Request, res: Response, next: NextFunction) {
+    try {
+      const request = new BoardUpdateRequest(req.body);
+
+      if (!req.user) {
+        throw new UnauthorizedException();
+      }
+
+      const result = await new BoardUpdateUseCase().update(
+        request,
+        req.user
+      );
+      console.log(result);
+      
 
       return res.json(result);
     } catch (e) {
