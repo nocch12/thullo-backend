@@ -2,6 +2,7 @@ import { Board, PrismaClient, User } from '@prisma/client';
 import { ForbiddenException } from '../../exceptions/ForbiddenException';
 import { BoardUpdatePublishedRequest } from '../../requests/board/BoardUpdatePublishedRequest';
 import { ResUser } from '../../response/user/ResUser';
+import { selectWithUser } from './types';
 
 export class BoardUpdateUseCase {
   private board;
@@ -23,6 +24,7 @@ export class BoardUpdateUseCase {
         published: boardReq.published
       },
     });
+
 
     return board;
   }

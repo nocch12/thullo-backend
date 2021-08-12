@@ -64,6 +64,8 @@ export class BoardController {
         request,
         req.user
       );
+      console.log(result);
+      
 
       return res.json(result);
     } catch (e) {

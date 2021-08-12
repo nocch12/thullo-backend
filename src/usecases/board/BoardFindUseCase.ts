@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { BoardDetailRequest } from '../../requests/board/BoardDetailRequest';
+import { selectWithUser } from './types';
 
 export class BoardFindUseCase {
   private board;
@@ -10,19 +11,7 @@ export class BoardFindUseCase {
 
   async getAllwithUsers() {
     const boardList = await this.board.findMany({
-      include: {
-        UsersOnBoards: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                imagePath: true,
-              },
-            },
-          },
-        },
-      },
+      include: selectWithUser,
     });
 
     const res = boardList.map((b) => {
@@ -37,21 +26,12 @@ export class BoardFindUseCase {
   async getDetail(req: BoardDetailRequest) {
     const board = await this.board.findUnique({
       where: { id: req.boardId },
-      include: {
-        UsersOnBoards: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                imagePath: true,
-              },
-            },
-          },
-        },
-      },
+      include: selectWithUser,
     });
 
-    return board;
+    return {
+      ...board,
+      users: board?.UsersOnBoards.map((u) => u.user) || [],
+    };
   }
 }
