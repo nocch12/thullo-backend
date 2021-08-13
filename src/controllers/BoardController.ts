@@ -7,13 +7,16 @@ import { BoardUpdateRequest } from '../requests/board/BoardUpdateRequest';
 import { BoardUpdatePublishedRequest } from '../requests/board/BoardUpdatePublishedRequest';
 import { BoardUpdateUseCase } from '../usecases/board/BoardUpdateUseCase';
 import { BoardDetailRequest } from '../requests/board/BoardDetailRequest';
+import { BoardResponse } from '../response/board/BoardResponse';
+import { BoardResponseArray } from '../response/board/BoardResponseArray';
 
 export class BoardController {
   // ボード一覧
   async index(req: Request, res: Response, next: NextFunction) {
     try {
       const result = await new BoardFindUseCase().getAllwithUsers();
-      return res.json(result);
+      const response = new BoardResponseArray(result).getResponse();
+      return res.json(response);
     } catch (e) {
       next(e);
     }
@@ -22,11 +25,10 @@ export class BoardController {
   // 詳細
   async detail(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log(5,req);
-      
       const request = new BoardDetailRequest(req.params);
       const result = await new BoardFindUseCase().getDetail(request);
-      return res.json(result);
+      const response = new BoardResponse(result).getResponse();
+      return res.json(response);
     } catch (e) {
       next(e);
     }
@@ -65,8 +67,6 @@ export class BoardController {
         request,
         req.user
       );
-      console.log(result);
-      
 
       return res.json(result);
     } catch (e) {

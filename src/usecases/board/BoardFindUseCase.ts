@@ -14,13 +14,7 @@ export class BoardFindUseCase {
       include: selectWithUser,
     });
 
-    const res = boardList.map((b) => {
-      return {
-        ...b,
-        users: b.UsersOnBoards?.map((u) => u.user),
-      };
-    });
-    return res;
+    return boardList;
   }
 
   async getDetail(req: BoardDetailRequest) {
@@ -29,9 +23,6 @@ export class BoardFindUseCase {
       include: selectWithUser,
     });
 
-    return {
-      ...board,
-      users: board?.UsersOnBoards.map((u) => u.user) || [],
-    };
+    return board;
   }
 }
