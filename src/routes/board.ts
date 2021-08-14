@@ -28,5 +28,10 @@ router.post(
   passport.authenticate('verify', { session: false }),
   boardController.inviteUser
 );
+router.delete(
+  '/user',
+  passport.authenticate('verify', { session: false }),
+  boardController.removeUser
+);
 
 export default router;

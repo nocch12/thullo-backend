@@ -11,6 +11,8 @@ import { BoardResponse } from '../response/board/BoardResponse';
 import { BoardResponseArray } from '../response/board/BoardResponseArray';
 import { BoardUserInviteRequest } from '../requests/board/BoardUserInviteRequest';
 import { BoardUserInviteUseCase } from '../usecases/board/BoardUserInviteUseCase';
+import { BoardUserRemoveRequest } from '../requests/board/BoardUserRemoveRequest';
+import { BoardUserRemoveUseCase } from '../usecases/board/BoardUserRemoveUseCase';
 
 export class BoardController {
   // ボード一覧
@@ -110,6 +112,29 @@ export class BoardController {
       const result = await new BoardUserInviteUseCase().invite(
         request.boardId,
         request.userIds
+      );
+      console.log(result);
+
+      const response = new BoardResponse(result).getResponse();
+
+      return res.json(response);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  // ユーザー除外
+  async removeUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const request = new BoardUserRemoveRequest(req.query);
+
+      if (!req.user) {
+        throw new UnauthorizedException();
+      }
+
+      const result = await new BoardUserRemoveUseCase().remove(
+        request.boardId,
+        request.userId
       );
       console.log(result);
 
