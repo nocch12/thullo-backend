@@ -7,6 +7,9 @@ import passport from '../middleware/passport';
 const userController = new UserController();
 
 // 新規登録
+router.get('/', userController.search);
+
+// 新規登録
 router.post('/register', async (req: IUserRegisterRequest, res, next) => {
   try {
     return await userController.register(req, res);

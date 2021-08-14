@@ -23,4 +23,10 @@ router.post(
   boardController.updatePublished
 );
 
+router.post(
+  '/user',
+  passport.authenticate('verify', { session: false }),
+  boardController.inviteUser
+);
+
 export default router;

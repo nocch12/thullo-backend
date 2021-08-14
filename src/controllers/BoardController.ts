@@ -9,6 +9,8 @@ import { BoardUpdateUseCase } from '../usecases/board/BoardUpdateUseCase';
 import { BoardDetailRequest } from '../requests/board/BoardDetailRequest';
 import { BoardResponse } from '../response/board/BoardResponse';
 import { BoardResponseArray } from '../response/board/BoardResponseArray';
+import { BoardUserInviteRequest } from '../requests/board/BoardUserInviteRequest';
+import { BoardUserInviteUseCase } from '../usecases/board/BoardUserInviteUseCase';
 
 export class BoardController {
   // ボード一覧
@@ -88,9 +90,32 @@ export class BoardController {
         req.user
       );
       console.log(result);
-      
 
-      return res.json(result);
+      const response = new BoardResponse(result).getResponse();
+      return res.json(response);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  // ユーザー招待
+  async inviteUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const request = new BoardUserInviteRequest(req.body);
+
+      if (!req.user) {
+        throw new UnauthorizedException();
+      }
+
+      const result = await new BoardUserInviteUseCase().invite(
+        request.boardId,
+        request.userIds
+      );
+      console.log(result);
+
+      const response = new BoardResponse(result).getResponse();
+
+      return res.json(response);
     } catch (e) {
       next(e);
     }

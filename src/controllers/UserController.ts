@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 import {
   IUserRegisterRequest,
@@ -7,8 +7,21 @@ import {
 import { UserRegisterUseCase } from '../usecases/user/UserRegisterUseCase';
 import { UserLoginUseCase } from '../usecases/user/UserLoginUseCase';
 import { NotFoundException } from '../exceptions/NotFoundException';
+import { UserFindUseCase } from '../usecases/user/UserFindUseCase';
+import { UserSearchRequest } from '../requests/user/UserSearchRequest';
 
 export class UserController {
+  // ユーザー検索
+  async search(req: Request, res: Response, next: NextFunction) {
+    try {
+      const request = new UserSearchRequest(req.query);
+      const result = await new UserFindUseCase().searchByName(request.q, request.excludeIds);
+      return res.json(result);
+    } catch (e) {
+      next(e);
+    }
+  }
+
   async register(req: IUserRegisterRequest, res: Response) {
     try {
       const request = new UserRegisterRequest(req.body);
@@ -31,7 +44,7 @@ export class UserController {
       if (!user) {
         throw new NotFoundException();
       }
-      
+
       const token = useCase.createToken(user);
 
       // クッキーにキー'jwt'でトークンをセット
