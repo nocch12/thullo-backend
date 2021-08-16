@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
 import { BoardDetailRequest } from '../../requests/board/BoardDetailRequest';
 import { selectWithUser } from './types';
 
@@ -9,8 +9,14 @@ export class BoardFindUseCase {
     this.board = prisma.board;
   }
 
-  async getAllwithUsers() {
+  async getAllwithUsers(authorId: User['id'], search?: string) {
     const boardList = await this.board.findMany({
+      where: {
+        AND: [
+          ...this.getSearchQuery(search),
+          { OR: [{ authorId }, { published: true }] },
+        ],
+      },
       include: selectWithUser,
     });
 
@@ -24,5 +30,19 @@ export class BoardFindUseCase {
     });
 
     return board;
+  }
+
+  getSearchQuery(query: string | undefined) {
+    const multiQuery = query?.split(/\s/);
+
+    if (!multiQuery || !multiQuery[0]) return [];
+
+    return multiQuery.map((q) => {
+      return {
+        boardName: {
+          contains: q,
+        },
+      };
+    });
   }
 }

@@ -13,12 +13,22 @@ import { BoardUserInviteRequest } from '../requests/board/BoardUserInviteRequest
 import { BoardUserInviteUseCase } from '../usecases/board/BoardUserInviteUseCase';
 import { BoardUserRemoveRequest } from '../requests/board/BoardUserRemoveRequest';
 import { BoardUserRemoveUseCase } from '../usecases/board/BoardUserRemoveUseCase';
+import { BoardSearchRequest } from '../requests/board/BoardSearchRequest';
+import { TaskFindUseCase } from '../usecases/task/TaskFindUseCase';
+import { TaskListsRequest } from '../requests/task/BoardSearchRequest';
 
 export class BoardController {
   // ボード一覧
   async index(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await new BoardFindUseCase().getAllwithUsers();
+      console.log(req.user);
+      
+      if (!req.user) {
+        throw new UnauthorizedException();
+      }
+
+      const request = new BoardSearchRequest(req.query);
+      const result = await new BoardFindUseCase().getAllwithUsers(req.user.id, request.search);
       const response = new BoardResponseArray(result).getResponse();
       return res.json(response);
     } catch (e) {

@@ -2,11 +2,17 @@ import express from 'express';
 const router = express.Router();
 import passport from '../middleware/passport';
 import { BoardController } from '../controllers/BoardController';
+import { TaskListController } from '../controllers/TaskListController';
 
 const boardController = new BoardController();
+const taskListController = new TaskListController();
 
-router.get('/', boardController.index);
-router.get('/:boardId(\\d+)', boardController.detail);
+router.get(
+  '/',
+  passport.authenticate('verify', { session: false }),
+
+  boardController.index
+);
 router.post(
   '/',
   passport.authenticate('verify', { session: false }),
@@ -32,6 +38,21 @@ router.delete(
   '/user',
   passport.authenticate('verify', { session: false }),
   boardController.removeUser
+);
+
+
+/**
+ * ボード詳細
+ */
+router.get(
+  '/:boardId(\\d+)',
+  passport.authenticate('verify', { session: false }),
+  boardController.detail
+);
+router.get(
+  '/:boardId(\\d+)/taskList',
+  passport.authenticate('verify', { session: false }),
+  taskListController.taskList
 );
 
 export default router;
