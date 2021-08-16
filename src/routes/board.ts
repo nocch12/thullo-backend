@@ -54,5 +54,10 @@ router.get(
   passport.authenticate('verify', { session: false }),
   taskListController.taskList
 );
+router.post(
+  '/:boardId(\\d+)/taskList',
+  passport.authenticate('verify', { session: false }),
+  taskListController.create
+);
 
 export default router;

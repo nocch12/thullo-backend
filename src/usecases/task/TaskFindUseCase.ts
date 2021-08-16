@@ -9,6 +9,34 @@ export class TaskFindUseCase {
 
   async getTaskLists(boardId: Board['id']) {
     const taskLists = await this.taskList.findMany({
+      include: {
+        Task: {
+          include: {
+            _count: {
+              select: {
+                TaskComment: true,
+                TaskFile: true,
+              },
+            },
+            LabelsOnTasks: {
+              include: {
+                label: true,
+              },
+            },
+            UsersOnTasks: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    imagePath: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
       where: {
         boardId: boardId,
       },

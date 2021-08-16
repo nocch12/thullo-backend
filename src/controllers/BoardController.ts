@@ -14,8 +14,6 @@ import { BoardUserInviteUseCase } from '../usecases/board/BoardUserInviteUseCase
 import { BoardUserRemoveRequest } from '../requests/board/BoardUserRemoveRequest';
 import { BoardUserRemoveUseCase } from '../usecases/board/BoardUserRemoveUseCase';
 import { BoardSearchRequest } from '../requests/board/BoardSearchRequest';
-import { TaskFindUseCase } from '../usecases/task/TaskFindUseCase';
-import { TaskListsRequest } from '../requests/task/BoardSearchRequest';
 
 export class BoardController {
   // ボード一覧
