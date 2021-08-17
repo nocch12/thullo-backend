@@ -7,7 +7,7 @@ const taskController = new TaskController();
 
 
 router.post(
-  '/:listId(\\d+)/task',
+  '/',
   passport.authenticate('verify', { session: false }),
   taskController.create
 );
