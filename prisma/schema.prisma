@@ -7,7 +7,7 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["selectRelationCount"]
 }
 
@@ -58,7 +58,7 @@ model TaskList {
   board    Board  @relation(fields: [boardId], references: [id])
   boardId  Int
   Task     Task[]
-  order    Int    @default(0)
+  order    Float  @default(0)
 }
 
 model UsersOnTasks {
@@ -73,10 +73,10 @@ model UsersOnTasks {
 
 model Task {
   id            Int             @id @default(autoincrement())
-  taskName     String
+  taskName      String
   description   String?         @db.LongText
   imagePath     String?
-  order         Int             @default(0)
+  order         Float           @default(0)
   list          TaskList        @relation(fields: [listId], references: [id])
   listId        Int
   author        User            @relation(fields: [authorId], references: [id])

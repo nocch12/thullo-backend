@@ -22,7 +22,7 @@ export class TaskListController {
   async create(req: Request, res: Response, next: NextFunction) {
     try {
       const request = new TaskListCreateRequest({...req.params, ...req.body});
-      const result = await new TaskListCreateUseCase().create(request.boardId, request.listName);
+      const result = await new TaskListCreateUseCase().create(request.boardId, request.listName, request.order);
       // const response = new BoardResponse(result).getResponse();
       // return res.json(response);
       return res.json(result);
