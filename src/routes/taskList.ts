@@ -11,4 +11,10 @@ router.post(
   taskListController.create
 );
 
+router.post(
+  '/delete',
+  passport.authenticate('verify', { session: false }),
+  taskListController.delete
+);
+
 export default router;
