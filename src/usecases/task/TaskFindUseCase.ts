@@ -11,6 +11,9 @@ export class TaskFindUseCase {
     const taskLists = await this.taskList.findMany({
       include: {
         Task: {
+          // select: {
+          //   id: true,
+          // },
           include: {
             _count: {
               select: {
@@ -35,6 +38,9 @@ export class TaskFindUseCase {
               },
             },
           },
+          orderBy: {
+            order: 'asc'
+          }
         },
       },
       where: {

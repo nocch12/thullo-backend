@@ -12,6 +12,12 @@ router.post(
 );
 
 router.post(
+  '/:listId(\\d+)',
+  passport.authenticate('verify', { session: false }),
+  taskListController.update
+);
+
+router.post(
   '/delete',
   passport.authenticate('verify', { session: false }),
   taskListController.delete

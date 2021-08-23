@@ -6,6 +6,8 @@ import { TaskListCreateUseCase } from '../usecases/taskList/TaskListCreateUseCas
 import { TaskListDeleteRequest } from '../requests/taskList/TaskListDeleteRequest';
 import { UnauthorizedException } from '../exceptions/UnauthorizedException';
 import { TaskListDeleteUseCase } from '../usecases/taskList/TaskListDeleteUseCase';
+import { TaskListUpdateRequest } from '../requests/taskList/TaskListUpdateRequest';
+import { TaskListUpdateUseCase } from '../usecases/taskList/TaskListUpdateUseCase';
 
 export class TaskListController {
   // リスト一覧
@@ -26,6 +28,19 @@ export class TaskListController {
     try {
       const request = new TaskListCreateRequest({...req.params, ...req.body});
       const result = await new TaskListCreateUseCase().create(request.boardId, request.listName, request.order);
+      // const response = new BoardResponse(result).getResponse();
+      // return res.json(response);
+      return res.json(result);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  // 更新
+  async update(req: Request, res: Response, next: NextFunction) {
+    try {
+      const request = new TaskListUpdateRequest({...req.params, ...req.body});
+      const result = await new TaskListUpdateUseCase().update(request.listId, request.listName, request.order);
       // const response = new BoardResponse(result).getResponse();
       // return res.json(response);
       return res.json(result);
